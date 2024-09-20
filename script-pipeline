@@ -1,0 +1,67 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_CREDENTIALS = credentials('sumanth2904') // Reference your credentials ID
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/sumanthg2904/myjava-application-sep-19.git' // Replace with your repo URL
+            }
+        }
+
+        stage('Build with Maven') {
+            steps {
+                script {
+                    sh 'mvn clean package -DskipTests' // Adjust as needed
+                }
+            }
+        }
+
+        stage('Login to Docker Hub') {
+            steps {
+                script {
+                    sh 'echo "$DOCKER_CREDENTIALS_PSW" | docker login -u "$DOCKER_CREDENTIALS_USR" --password-stdin'
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'docker build -t sumanth2904/java-app .' // Adjust the image name
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    sh 'docker push sumanth2904/java-app' // Adjust as needed
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    sh 'docker run -d -p 8084:8080 sumanth2904/java-app' // Adjust as needed
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Cleaning up resources...'
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}
