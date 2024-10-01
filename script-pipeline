@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_CREDENTIALS = credentials('sumanth2904') // Reference your credentials ID
+        DOCKER_CREDENTIALS = credentials('shivanandd') // Reference your credentials ID
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/sumanthg2904/myjava-application-sep-19.git' // Replace with your repo URL
+                git 'https://github.com/Shivud/myjava-application.git' // Replace with your repo URL
             }
         }
 
@@ -31,7 +31,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t sumanth2904/java-app .' // Adjust the image name
+                    sh 'docker build -t shivanandd/java-app .' // Adjust the image name
                 }
             }
         }
@@ -39,7 +39,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    sh 'docker push sumanth2904/java-app' // Adjust as needed
+                    sh 'docker push shivanandd/java-app' // Adjust as needed
                 }
             }
         }
@@ -47,7 +47,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh 'docker run -d -p 8084:8080 sumanth2904/java-app' // Adjust as needed
+                    sh 'docker run -d -p 8024:8080 shivanandd/java-app' // Adjust as needed
                 }
             }
         }
